@@ -28,6 +28,9 @@ df.columns = [
 df.describe()
 
 #%%
+df.info()
+
+#%% 
 _ = sns.scatterplot(
     x="area",
     y="asymmetry_coefficient",
@@ -36,17 +39,45 @@ _ = sns.scatterplot(
     legend="full",
 )
 
-
-# %% also try lmplot and pairplot
+# %% LMPLOT Asymmetry v Area
 sns.set_style('whitegrid') 
 sns.lmplot(x="area", 
-    y="asymmetry_coefficient", 
+    y="asymmetry_coefficient",
     data = df
 )
 _ = plt.title("Asymmetry Coefficient v Area")
 
+# %% LMPLOT Asymmetry v Area, Hue of Target
+sns.set_style('whitegrid') 
+sns.lmplot(x="area", 
+    y="asymmetry_coefficient",
+    hue="target",
+    data = df
+)
+_ = plt.title("Asymmetry Coefficient v Area, by Target")
+
+# %% Perimeter v compactness
+sns.set_style('whitegrid') 
+sns.lmplot(x="compactness", 
+    y="perimeter", 
+    data = df
+)
+_ = plt.title("Perimeter v Compactness")
+#%% PAIRPLOT
+sns.set_style('whitegrid')
+sns.pairplot(df, 
+    hue="target",
+)
+
+#%% PAIRGRID
+sns.set_style('darkgrid')
+g = sns.PairGrid(df, diag_sharey=False)
+g.map_upper(sns.scatterplot)
+g.map_lower(sns.kdeplot)
+g.map_diag(sns.kdeplot)
+
 # %% determine the best numbmer of clusters
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans 
 from sklearn.metrics import homogeneity_score
 
 
@@ -83,12 +114,29 @@ ax = sns.lineplot(
 ax.set_ylabel("homogeneity")
 ax.figure.legend()
 
+# DBSCAN CLUSTER ANALYSIS
+#%%
+X = {df["target"]}
 
-# %% Perimeter v compactness
-sns.set_style('whitegrid') 
-sns.lmplot(x="compactness", 
-    y="perimeter", 
-    data = df
+# call leaner
+from sklearn.cluster import DBSCAN
+dbscan = DBSCAN(x)
+pred = dbscan.fit_predict(x)
+
+#%%
+## metrics
+from sklearn.metrics import homogeneity_score
+print(f"homogeneity: {homogeneity_score(y, pred)}")
+
+#%% plot
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+_, axes = plt.subplots(1, 2)
+sns.scatterplot(
+x=[x[0] for x in X] ,y=[x[1] for x in X], hue=y,ax=axes[0]
 )
-_ = plt.title("Perimeter v Compactness")
-# %%
+sns.scatterplot(
+x=[x[0] for x in X] ,y=[x[1] for x in X], hue=pred,ax=axes[1]
+)
+plt.show()
