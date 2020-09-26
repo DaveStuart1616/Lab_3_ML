@@ -109,18 +109,27 @@ from sklearn.preprocessing import OneHotEncoder
 imp = SimpleImputer(missing_values=np.nan, strategy='mean')
 enc = OneHotEncoder(handle_unknown='ignore')
 
-selected_columns = ["GrLivArea", "OverallQual", "YearBuilt",
-    "CentralAir"]
+selected_columns = [
+    "GrLivArea", 
+    "OverallQual", 
+    "YearBuilt",
+    "CentralAir",
+    "1stFlrSF", 
+    "2ndFlrSF", 
+    "LotArea",
+    "Neighborhood",
+    "MasVnrArea"
+]
 train_x = train[selected_columns]
 train_y = train["SalePrice"]
 
 train_x["GrLivArea"] = train_x["GrLivArea"].fillna("unknown")
-train_x["OverallQual"] = train_x["OverallQual"].fillna("unknown")
+train_x["MasVnrArea"] = train_x["OverallQual"].fillna("unknown")
 
 ct = ColumnTransformer(
     [
-        #("age_fillna", imp, ["Age"]),
-        ("ohe", enc, ["CentralAir"]),  
+        ("MasVnrArea_fillna", imp, ["MasVnrArea"]),
+        ("ohe", enc, ["CentralAir", "Neighborhood"]),  
     ],
     remainder="passthrough"
 )
@@ -138,8 +147,17 @@ print(evaluate(mlp, train_x, train_y))
 
 # %%  TESTING DATASET DATA TRANSFORMATION
 
-selected_columns = ["GrLivArea", "OverallQual", "YearBuilt",
-    "CentralAir"]
+selected_columns = [
+    "GrLivArea", 
+    "OverallQual", 
+    "YearBuilt",
+    "CentralAir",
+    "1stFlrSF", 
+    "2ndFlrSF", 
+    "LotArea",
+    "Neighborhood",
+    "MasVnrArea"
+]
 test_x = test[selected_columns]
 test_y = truth["SalePrice"]
 
