@@ -24,22 +24,22 @@ train.describe(include="all")
 _ = sns.countplot(x="Survived", data=train)
 
 
-# %% Survived w.r.t Pclass / Sex / Embarked 
+# %% Survived w.r.t Sex  
 _ = sns.countplot(x="Survived", hue="Sex", data=train)
 
-#%%
+#%%Survived / Embarked
 _ = sns.countplot(x="Survived", hue="Embarked", data=train)
 
-#%%
+#%% Survived / Pclass
 _ = sns.countplot(x="Survived", hue="Pclass", data=train)
 
-#%% ALL VARIABLES
+#%% Sex / Pclass / Survived / Embarked
 g = sns.FacetGrid(train, col="Sex", height=6, aspect=.8)
 _ = g.map(sns.barplot, "Pclass", "Survived", "Embarked")
 
 
-#%% Survived wrt Sex Count
-#Female
+#%% 
+#
 # df = train
 # df_f = df[df["Sex"] == "female"]
 # df_fs = df_f[df_f["Survived"] == 1]
@@ -64,7 +64,7 @@ _ = plt.title("Age Distribution-All Passengers")
 # %% Survived w.r.t Age distribution ?
 sns.distplot(train[train["Survived"]==1]["Age"], label="survived")
 sns.distplot(train[train["Survived"]==0]["Age"], label="perished")
-plt.legend()
+_ = plt.legend()
 
 #%%
 #df_s = train ==
@@ -79,7 +79,7 @@ plt.legend()
 #_ = sns.displot(df_d, x="Age", binwidth=3) #non-survivor plot
 #_ = plt.title("Perished")
 
-#%% #Both Histograms above
+#%% 
 # _ = sns.distplot(df_s["Age"], #Survivor
 #     hist=False,
 #     color="blue",
@@ -96,12 +96,12 @@ plt.legend()
 # _ = plt.title("Survived and Perished by Age")
 # _ = plt.legend()
 
-# %% SibSp / Parch distribution ?
+# %% SibSp 
 sns.displot(train, x="SibSp", binwidth=1)
 _ = plt.title("Number of Siblings")
 
 
-# %% Survived w.r.t SibSp / Parch  ?
+# %%  Parch  ?
 sns.displot(train, x="Parch", binwidth=1)
 _ = plt.title("Parch - Number of Parent/Children")
 
@@ -137,7 +137,7 @@ print(evaluate(dummy_clf, dummy_test_x, dummy_test_y))
 print("Can you do better than a dummy classifier?")
 
 # NEURAL NETWORK F_SCORE METHOD CLASSIFICATION
-#%% TRAINING DATASET DATA TRANSFORMATION
+#%% TRAINING DATASET NEURAL NETWORK DATA TRANSFORMATION
 
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -163,7 +163,7 @@ ct = ColumnTransformer(
 
 train_x = ct.fit_transform(train_x)
 
-# %% TRAINING SET F-SCORE CALC
+# %% TRAINING SET NEURAL NETWORK F-SCORE CALC
 from sklearn.neural_network import MLPClassifier
 
 mlp = MLPClassifier()
@@ -183,7 +183,7 @@ test_x["Cabin"] = test_x["Cabin"].fillna("unknown")
 
 test_x = ct.transform(test_x)
 
-#%% TESTING SET F-SCORE CALC
+#%% TESTING SET NEURAL NETWORK F-SCORE CALC
 print("Test Set Performance")
 print(evaluate(mlp, test_x, test_y))
 
